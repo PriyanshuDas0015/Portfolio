@@ -1,0 +1,241 @@
+.resume-section {
+  background:
+    radial-gradient(circle at 12% 20%, #624dff16, transparent 35%),
+    radial-gradient(circle at 88% 60%, #159be60d, transparent 40%);
+}
+.resume-card {
+  display: grid;
+  grid-template-columns: 1fr 0.8fr;
+  align-items: center;
+  min-height: 470px;
+  padding: 50px 60px;
+  overflow: hidden;
+  background: linear-gradient(145deg, rgba(19, 31, 57, 0.92), rgba(8, 15, 30, 0.96));
+  box-shadow:
+    inset 0 1px #ffffff12,
+    0 25px 80px #0005,
+    0 0 50px #5146ff0d;
+}
+.resume-info {
+  position: relative;
+  z-index: 2;
+}
+.resume-badge {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.7rem;
+  letter-spacing: 1.4px;
+  color: #a993ed;
+  background: #9877e912;
+  border: 1px solid #9a7ce933;
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+.resume-badge svg {
+  width: 15px;
+}
+.resume-info h3 {
+  font-size: 2.3rem;
+  margin: 25px 0 4px;
+}
+.resume-info > p {
+  font-size: 0.92rem;
+}
+.resume-info > p span {
+  color: #9a7ee8;
+  margin: 0 5px;
+}
+.resume-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 26px 0;
+  display: grid;
+  gap: 10px;
+}
+.resume-info li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #adb8cc;
+  font-size: 0.82rem;
+}
+.resume-info li svg {
+  width: 16px;
+  color: #6dd1a6;
+}
+.resume-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.resume-pending {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 15px;
+  background: #9277dc0d;
+  border: 1px solid #a88be629;
+  border-radius: 10px;
+  color: #8d9ab0;
+  max-width: 500px;
+}
+.resume-pending > svg {
+  color: #ad91ec;
+  width: 20px;
+  flex-shrink: 0;
+}
+.resume-pending span {
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+.resume-pending strong {
+  display: block;
+  color: #c1c9d8;
+  font-size: 0.8rem;
+}
+.resume-preview {
+  position: relative;
+  width: 300px;
+  height: 360px;
+  margin-left: auto;
+  perspective: 1000px;
+}
+.resume-page {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, #eff3fa, #cbd5e5);
+  color: #172238;
+  padding: 28px 25px;
+  border-radius: 5px;
+  rotate: 3deg;
+  box-shadow: 0 30px 70px #0007;
+  z-index: 2;
+}
+.resume-page-shadow {
+  position: absolute;
+  inset: 15px -10px -10px 15px;
+  border: 1px solid #8068d455;
+  background: #131c31;
+  rotate: -3deg;
+  border-radius: 6px;
+}
+.resume-page header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.resume-monogram {
+  width: 38px;
+  height: 38px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  background: #2c3f72;
+  color: white;
+  font: 700 0.8rem var(--heading);
+}
+.resume-page header strong {
+  font: 700 0.85rem var(--heading);
+  display: block;
+}
+.resume-page header span {
+  font-size: 0.45rem;
+  color: #647087;
+}
+.document-rule {
+  height: 2px;
+  background: linear-gradient(90deg, #6979ae, #9f6bcb);
+  margin: 17px 0;
+}
+.document-block {
+  display: grid;
+  gap: 7px;
+  margin: 17px 0;
+}
+.document-block > span {
+  width: 40%;
+  height: 6px;
+  background: #586988;
+  border-radius: 3px;
+}
+.document-block i,
+.document-grid i {
+  height: 4px;
+  background: #9aa7bc;
+  border-radius: 3px;
+}
+.document-block i:last-child {
+  width: 80%;
+}
+.document-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 22px 0;
+}
+.document-grid > div {
+  display: grid;
+  gap: 7px;
+}
+.document-grid svg,
+.document-block svg {
+  width: 14px;
+  color: #6d50a0;
+}
+.document-block.short i {
+  width: 92%;
+}
+.resume-page footer {
+  position: absolute;
+  bottom: 18px;
+  left: 25px;
+  right: 25px;
+  border-top: 1px solid #9ba7bb;
+  padding-top: 8px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 0.43rem;
+  color: #6b778d;
+  overflow: hidden;
+}
+.resume-page footer svg {
+  width: 10px;
+}
+@media (max-width: 900px) {
+  .resume-card {
+    padding: 40px;
+    grid-template-columns: 1fr 0.7fr;
+  }
+  .resume-preview {
+    width: 230px;
+    height: 300px;
+  }
+  .resume-page {
+    padding: 22px 20px;
+  }
+  .resume-info h3 {
+    font-size: 2rem;
+  }
+}
+@media (max-width: 700px) {
+  .resume-card {
+    grid-template-columns: 1fr;
+    padding: 28px;
+  }
+  .resume-preview {
+    width: 220px;
+    height: 280px;
+    margin: 45px auto 10px;
+  }
+  .resume-info h3 {
+    font-size: 1.8rem;
+  }
+  .resume-actions {
+    flex-direction: column;
+  }
+  .resume-actions .button {
+    width: 100%;
+  }
+}

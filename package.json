@@ -1,0 +1,30 @@
+{
+  "name": "priyanshu-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "frontend",
+    "backend",
+    "admin"
+  ],
+  "scripts": {
+    "install:all": "npm install",
+    "dev": "concurrently -k -n API,WEB,ADMIN -c blue,magenta,cyan \"npm run dev -w backend\" \"npm run dev -w frontend\" \"npm run dev -w admin\"",
+    "build": "npm run build -w frontend && npm run build -w admin",
+    "start": "npm start -w backend",
+    "test": "npm test -w backend",
+    "seed": "npm run seed -w backend",
+    "seed:admin": "npm run seed:admin -w backend",
+    "create-admin": "npm run create-admin -w backend",
+    "test:browser": "playwright test",
+    "test:admin": "playwright test -c admin.playwright.config.js",
+    "format": "prettier --write frontend/src frontend/tests admin/src admin/tests backend/src backend/test *.json *.js *.md frontend/*.js frontend/*.json frontend/*.html admin/*.js admin/*.json admin/*.html backend/*.json",
+    "format:check": "prettier --check frontend/src frontend/tests admin/src admin/tests backend/src backend/test *.json *.js *.md frontend/*.js frontend/*.json frontend/*.html admin/*.js admin/*.json admin/*.html backend/*.json"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "1.63.0",
+    "concurrently": "^9.2.1",
+    "prettier": "^3.9.6"
+  }
+}

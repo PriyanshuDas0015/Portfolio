@@ -1,0 +1,29 @@
+.torn-divider {
+  position: absolute;
+  z-index: 4;
+  top: -23px;
+  left: 0;
+  width: 100%;
+  height: 48px;
+  pointer-events: none;
+  background: linear-gradient(#d8d4ce 0 42%, #807c78 45%, #080b14 50%) bottom / 100% 100% no-repeat;
+  -webkit-mask: url('./torn-divider.svg') center / 100% 100% no-repeat;
+  mask: url('./torn-divider.svg') center / 100% 100% no-repeat;
+  opacity: 0.66;
+  filter: drop-shadow(0 7px 8px #000a);
+}
+.torn-divider::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-radial-gradient(circle, #0002 0 0.5px, transparent 0.8px 4px);
+  mix-blend-mode: multiply;
+  opacity: 0.45;
+}
+@media (max-width: 767px) {
+  .torn-divider {
+    height: 34px;
+    top: -16px;
+    opacity: 0.5;
+  }
+}

@@ -1,0 +1,115 @@
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 18px;
+}
+.skill-card {
+  grid-column: span 2;
+  position: relative;
+  overflow: hidden;
+}
+.skill-card:nth-last-child(-n + 2) {
+  grid-column: span 3;
+}
+.skill-content {
+  padding: 28px;
+  min-height: 220px;
+  height: 100%;
+  background-image: radial-gradient(
+    250px circle at var(--mouse-x, 0%) var(--mouse-y, 0%),
+    #aa83fa0a,
+    transparent
+  );
+}
+.skill-icon {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  background: #a184ee12;
+  border: 1px solid #a184ee25;
+  border-radius: 10px;
+  color: #b799fb;
+  margin-bottom: 20px;
+  transition: filter 0.25s;
+}
+.skill-card:hover .skill-icon {
+  filter: drop-shadow(0 0 9px #a184ee66);
+}
+.skill-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+}
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.skill-tags > span {
+  font-size: 0.75rem;
+  border: 1px solid #91a0c017;
+  background: #151e2c;
+  padding: 4px 9px;
+  border-radius: 5px;
+  color: #a5b0c5;
+}
+.skill-index {
+  position: absolute;
+  top: 28px;
+  right: 26px;
+  font-family: var(--heading);
+  font-size: 0.75rem;
+  color: #566178;
+}
+.skill-green .skill-icon {
+  color: #82cea0;
+  background: #64c8850d;
+  border-color: #64c88526;
+}
+.skill-blue .skill-icon {
+  color: #7fa5e8;
+  background: #7fa5e80d;
+  border-color: #7fa5e826;
+}
+.skill-pink .skill-icon {
+  color: #d69dc6;
+  background: #d69dc60d;
+  border-color: #d69dc626;
+}
+.skill-cyan .skill-icon {
+  color: #79c9d5;
+  background: #79c9d50d;
+  border-color: #79c9d526;
+}
+@media (max-width: 767px) {
+  .skills-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .skill-card,
+  .skill-card:nth-last-child(-n + 2) {
+    grid-column: span 1;
+  }
+  .skill-card:last-child {
+    grid-column: span 2;
+  }
+  .skill-content {
+    padding: 20px;
+    min-height: 230px;
+  }
+  .skill-index {
+    right: 18px;
+    top: 21px;
+  }
+  .skill-tags > span {
+    font-size: 0.75rem;
+  }
+}
+@media (max-width: 390px) {
+  .skill-content {
+    padding: 17px;
+  }
+  .skill-card h3 {
+    font-size: 1rem;
+  }
+}
