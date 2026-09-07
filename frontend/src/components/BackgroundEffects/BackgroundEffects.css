@@ -1,0 +1,41 @@
+.background-effects {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1050px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+.background-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(#7082bd06 1px, transparent 1px),
+    linear-gradient(90deg, #7082bd06 1px, transparent 1px);
+  background-size: 65px 65px;
+  mask-image: linear-gradient(black, black 60%, transparent);
+}
+.background-orb {
+  position: absolute;
+  top: 90px;
+  right: -150px;
+  width: 800px;
+  height: 750px;
+  background: radial-gradient(ellipse, #6550b418, transparent 68%);
+}
+.background-stars {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #c5c7ff70;
+  left: 20%;
+  top: 140px;
+  box-shadow:
+    310px 40px #888bca60,
+    550px -30px #aaaee755,
+    780px 170px #b6a9e966,
+    980px 290px #aaaee755,
+    -170px 280px #aaaee755,
+    250px 430px #aaaee744,
+    550px 620px #aaaee755;
+}

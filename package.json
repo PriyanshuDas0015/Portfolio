@@ -1,0 +1,25 @@
+{
+  "name": "priyanshu-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "install:all": "npm install",
+    "dev": "concurrently -k -n API,WEB -c blue,magenta \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "build": "npm run build -w frontend",
+    "start": "npm start -w backend",
+    "test": "npm test -w backend",
+    "test:browser": "playwright test",
+    "format": "prettier --write frontend/src frontend/tests backend/src backend/test *.json *.js *.md frontend/*.js frontend/*.json frontend/*.html backend/*.json",
+    "format:check": "prettier --check frontend/src frontend/tests backend/src backend/test *.json *.js *.md frontend/*.js frontend/*.json frontend/*.html backend/*.json"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.55.0",
+    "concurrently": "^9.2.1",
+    "prettier": "^3.9.6"
+  }
+}

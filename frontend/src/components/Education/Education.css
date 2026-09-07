@@ -1,0 +1,118 @@
+.education-card {
+  padding: 37px;
+  display: flex;
+  gap: 27px;
+  position: relative;
+  background: radial-gradient(ellipse at 100% 0%, #a180e90b, transparent 60%), var(--card);
+}
+.education-icon {
+  height: 65px;
+  width: 65px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  border: 1px solid #a587e735;
+  background: #a184ee0d;
+  color: #b197e4;
+}
+.education-kicker {
+  font-size: 0.75rem;
+  letter-spacing: 1.8px;
+  color: #9b85bf;
+}
+.education-main h3 {
+  font-size: 1.5rem;
+  margin: 10px 0;
+}
+.education-main > p {
+  font-size: 0.93rem;
+  color: #b5bfd2;
+}
+.education-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  margin-top: 12px;
+}
+.education-meta > span {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #8693ac;
+}
+.coursework {
+  margin-top: 27px;
+}
+.coursework > span {
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  color: #707d96;
+}
+.coursework > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.coursework .pill {
+  font-size: 0.75rem;
+}
+.education-status {
+  position: absolute;
+  right: 29px;
+  top: 33px;
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #a4cab6;
+  padding: 4px 9px;
+  border: 1px solid #77be9626;
+  border-radius: 30px;
+  background: #7cab8c0a;
+}
+.education-status i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #74c99b;
+}
+@media (max-width: 900px) {
+  .education-status {
+    position: static;
+    align-self: start;
+    margin-left: auto;
+  }
+  .education-main h3 {
+    font-size: 1.2rem;
+  }
+  .education-card {
+    padding: 26px;
+    gap: 20px;
+  }
+}
+@media (max-width: 650px) {
+  .education-card {
+    display: block;
+    padding: 25px;
+  }
+  .education-icon {
+    margin-bottom: 22px;
+    height: 50px;
+    width: 50px;
+  }
+  .education-status {
+    position: absolute;
+    top: 29px;
+    right: 22px;
+  }
+  .education-meta {
+    gap: 10px;
+    flex-direction: column;
+  }
+  .education-main h3 {
+    font-size: 1.3rem;
+  }
+}

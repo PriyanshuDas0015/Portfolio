@@ -1,0 +1,1 @@
+Add actual project screenshots under `your-home/`, `netflix-clone/`, `spotify-clone/` and `instagram-clone/`. Set each project's `image` in `src/data/projects.js`, for example `/project-images/your-home/cover.webp`. Until then, the cards use explicitly labeled abstract concept artwork. Failed images fall back to that artwork.

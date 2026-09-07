@@ -1,0 +1,127 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  border-bottom: 1px solid transparent;
+  transition:
+    background 0.3s,
+    border-color 0.3s;
+}
+.navbar-scrolled {
+  background: #080d18df;
+  backdrop-filter: blur(20px);
+  border-color: var(--border);
+  box-shadow: 0 6px 25px #0002;
+}
+.nav-inner {
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 26px;
+}
+.logo {
+  font-family: var(--heading);
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -2px;
+}
+.logo span {
+  color: var(--purple);
+}
+.nav-links {
+  display: flex;
+  gap: 27px;
+  align-items: center;
+}
+.nav-links a {
+  font-size: 0.8rem;
+  color: #a3acbf;
+  position: relative;
+  padding-block: 12px;
+  transition: color 0.2s;
+}
+.nav-links a:hover,
+.nav-links a[aria-current] {
+  color: #c8b3ff;
+}
+.nav-links a[aria-current]::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  height: 3px;
+  width: 3px;
+  background: var(--purple);
+  border-radius: 50%;
+  left: 50%;
+}
+.nav-cta {
+  font-size: 0.78rem;
+  min-height: 40px;
+  padding: 8px 18px;
+  border-color: #9a77e748;
+  background: #8260d719;
+}
+.menu-toggle {
+  display: none;
+}
+@media (max-width: 1100px) {
+  .nav-links {
+    gap: 17px;
+  }
+  .nav-inner {
+    gap: 16px;
+  }
+}
+@media (max-width: 900px) {
+  .menu-toggle {
+    display: inline-flex;
+  }
+  .nav-cta {
+    margin-left: auto;
+  }
+  .nav-inner {
+    height: 76px;
+  }
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 76px;
+    left: 0;
+    right: 0;
+    padding: 24px;
+    background: #090e1cf7;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 20px 50px #0009;
+  }
+  .nav-open {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+  .nav-links a {
+    font-size: 1rem;
+    padding: 12px 20px;
+  }
+  .nav-links a[aria-current]::after {
+    left: 0;
+    bottom: 23px;
+  }
+  .nav-open {
+    animation: menu-in 0.2s ease-out;
+  }
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

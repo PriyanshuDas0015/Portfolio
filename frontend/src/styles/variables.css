@@ -1,0 +1,14 @@
+:root {
+  --bg: #050810;
+  --surface: #080d18;
+  --card: rgba(12, 20, 35, 0.7);
+  --border: rgba(130, 150, 255, 0.15);
+  --text: #f5f7ff;
+  --muted: #9ca7ba;
+  --purple: #ad8bfa;
+  --blue: #739afc;
+  --green: #68dcb0;
+  --heading: 'Space Grotesk', sans-serif;
+  --body: 'Inter', sans-serif;
+  --radius: 18px;
+}

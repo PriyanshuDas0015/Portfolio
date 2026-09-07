@@ -1,0 +1,58 @@
+@keyframes gradient-flow {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+@keyframes orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -10px;
+  }
+}
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.orbit-scene {
+  translate: var(--parallax-x, 0px) var(--parallax-y, 0px);
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .custom-cursor {
+    display: none !important;
+  }
+  .orbit-scene {
+    translate: none;
+  }
+  .button:hover,
+  .card-hover:hover,
+  .project-card:hover .project-abstract,
+  .project-card:hover img {
+    transform: none !important;
+  }
+}

@@ -1,0 +1,1 @@
+Place the supplied resume PDF here as `Priyanshu-Das-Resume.pdf`, then set `site.resume` in `src/data/socialLinks.js` to `/resume/Priyanshu-Das-Resume.pdf`. No resume was supplied with the requirements, so the site does not fabricate one or expose a broken download link.

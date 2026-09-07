@@ -1,0 +1,134 @@
+.journey-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 80px;
+}
+.journey-intro > p {
+  margin-top: 25px;
+  font-size: 0.875rem;
+}
+.journey-note {
+  display: flex;
+  gap: 17px;
+  align-items: center;
+  margin-top: 40px;
+}
+.journey-note > span {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--purple);
+  font-size: 1.2rem;
+}
+.journey-note p {
+  font-size: 0.75rem;
+}
+.journey-note strong {
+  font-weight: 400;
+  color: #c1b6d7;
+}
+.timeline {
+  position: relative;
+  padding-left: 43px;
+}
+.timeline-track {
+  position: absolute;
+  left: 7px;
+  top: 8px;
+  bottom: 10px;
+  width: 1px;
+  background: #9381cc25;
+}
+.timeline-track > div {
+  height: 100%;
+  background: linear-gradient(#9f78f2, #717ded);
+  transform-origin: top;
+  box-shadow: 0 0 7px #a383e750;
+}
+.timeline-item {
+  position: relative;
+  padding-bottom: 35px;
+}
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+.timeline-marker {
+  position: absolute;
+  left: -43px;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #9176ca66;
+  border-radius: 50%;
+  background: #141127;
+  display: grid;
+  place-items: center;
+  color: #9d85cc;
+}
+.timeline-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 11px;
+}
+.timeline-meta > span {
+  font-size: 0.75rem;
+  letter-spacing: 1.25px;
+  color: #a58cca;
+}
+.timeline-meta > small {
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  color: #717c93;
+}
+.timeline-item h3 {
+  font-size: 1.15rem;
+  letter-spacing: -0.3px;
+  margin-bottom: 11px;
+}
+.timeline-item > p {
+  font-size: 0.81rem;
+  line-height: 1.85;
+}
+.timeline-current .timeline-marker {
+  background: #9170d4;
+  box-shadow: 0 0 14px #a483df55;
+  color: white;
+}
+.timeline-current .timeline-meta > small {
+  color: #a28bc7;
+  background: #ad86f210;
+  padding: 3px 7px;
+  border-radius: 4px;
+}
+@media (max-width: 900px) {
+  .journey-layout {
+    gap: 40px;
+    grid-template-columns: 0.8fr 1.2fr;
+  }
+}
+@media (max-width: 767px) {
+  .journey-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .journey-note {
+    display: none;
+  }
+  .timeline {
+    padding-left: 35px;
+  }
+  .timeline-marker {
+    left: -35px;
+  }
+  .timeline-meta > span {
+    font-size: 0.75rem;
+  }
+  .timeline-meta > small {
+    font-size: 0.75rem;
+  }
+}
