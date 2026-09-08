@@ -1,0 +1,245 @@
+.global-lava {
+  --lava-progress: 0;
+  --mountain-shift: 0px;
+  --lava-shift: 0px;
+  --fog-shift: 0px;
+  --fog-shift-reverse: 0px;
+  position: absolute;
+  z-index: 0;
+  top: min(100svh, 920px);
+  right: 0;
+  bottom: 0;
+  left: 0;
+  min-height: 900px;
+  overflow: hidden;
+  pointer-events: none;
+  background: #03050d;
+}
+.global-lava__landscape {
+  position: absolute;
+  inset: -80px -2vw;
+  background:
+    linear-gradient(180deg, rgba(3, 5, 13, 0.03), rgba(3, 5, 13, 0.14)),
+    url('/hero/global-lava-world.webp') center center / cover fixed no-repeat;
+  transform: translate3d(0, var(--mountain-shift), 0) scale(1.02);
+  transform-origin: center top;
+  opacity: 0.86;
+  filter: saturate(1.12) contrast(1.06);
+  will-change: transform;
+}
+.global-lava__readability {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(3, 5, 13, 0.12),
+      rgba(3, 5, 13, 0.58) 28%,
+      rgba(3, 5, 13, 0.62) 72%,
+      rgba(3, 5, 13, 0.1)
+    ),
+    linear-gradient(
+      180deg,
+      rgba(3, 5, 13, 0.2),
+      transparent 12%,
+      transparent 86%,
+      rgba(3, 5, 13, 0.42)
+    );
+}
+.global-lava__fog {
+  position: absolute;
+  width: 68vw;
+  height: 28vh;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgba(115, 83, 194, 0.15),
+    rgba(27, 39, 83, 0.08) 38%,
+    transparent 70%
+  );
+  filter: blur(22px);
+  opacity: 0.55;
+  will-change: transform;
+  animation: global-fog-drift 18s ease-in-out infinite alternate;
+}
+.global-lava__fog--one {
+  top: 24%;
+  left: -18%;
+  transform: translate3d(0, var(--fog-shift), 0);
+}
+.global-lava__fog--two {
+  top: 68%;
+  right: -16%;
+  transform: translate3d(0, var(--fog-shift-reverse), 0);
+  animation-delay: -9s;
+}
+.global-lava__flow {
+  position: absolute;
+  inset: -2% 0;
+  opacity: 0.42;
+  mix-blend-mode: screen;
+  transform: translate3d(0, var(--lava-shift), 0);
+  will-change: transform;
+}
+.global-lava svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.global-lava path {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.lava-reveal {
+  stroke: white;
+  stroke-width: 15;
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--lava-progress));
+  transition: stroke-dashoffset 0.16s linear;
+}
+.lava-reveal-branch {
+  stroke-width: 10;
+  stroke-dashoffset: calc(1.08 - var(--lava-progress));
+}
+.lava-bloom {
+  stroke: rgba(124, 60, 255, 0.38);
+  stroke-width: 25;
+  filter: url('#lava-bloom');
+}
+.lava-edge {
+  stroke: rgba(77, 66, 217, 0.56);
+  stroke-width: 8;
+  filter: url('#lava-soft');
+}
+.lava-body {
+  stroke: url('#lava-gradient');
+  stroke-width: 4.4;
+  filter: drop-shadow(0 0 5px #7c3cff);
+}
+.lava-core {
+  stroke: #f1ddff;
+  stroke-width: 1.1;
+  stroke-dasharray: 0.025 0.052;
+  animation: lava-flow 3.8s linear infinite;
+  filter: drop-shadow(0 0 3px #c99aff);
+}
+.lava-branch {
+  opacity: 0.64;
+}
+.global-lava-particles {
+  position: absolute;
+  inset: 0;
+}
+.global-lava-particles i {
+  position: absolute;
+  top: var(--y);
+  left: var(--x);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: #c7a2ff;
+  box-shadow: 0 0 9px 2px rgba(124, 60, 255, 0.6);
+  opacity: calc(0.1 + var(--lava-progress) * 0.52);
+  animation: lava-particle 7s ease-in-out var(--delay) infinite;
+}
+.global-lava--project {
+  top: 62px;
+}
+.global-lava--project .global-lava__landscape {
+  opacity: 0.9;
+}
+.global-lava--project .global-lava__flow {
+  transform: translate3d(-9%, var(--lava-shift), 0);
+}
+.global-lava--gen-villa .global-lava__flow {
+  transform: translate3d(11%, var(--lava-shift), 0) scaleX(-1);
+}
+.global-lava--netflix-clone .global-lava__flow {
+  transform: translate3d(18%, calc(var(--lava-shift) + 8%), 0);
+}
+.global-lava--zara-vice-assistant .global-lava__flow {
+  transform: translate3d(-15%, var(--lava-shift), 0) scaleX(0.92);
+}
+.global-lava--engineering-vault .global-lava__flow {
+  transform: translate3d(4%, var(--lava-shift), 0) scaleX(1.08);
+}
+@keyframes lava-flow {
+  to {
+    stroke-dashoffset: -0.154;
+  }
+}
+@keyframes lava-particle {
+  0%,
+  100% {
+    transform: translate3d(0, 8px, 0) scale(0.75);
+    opacity: 0.1;
+  }
+  50% {
+    transform: translate3d(7px, -15px, 0) scale(1);
+    opacity: 0.68;
+  }
+}
+@keyframes global-fog-drift {
+  from {
+    margin-left: -3vw;
+    opacity: 0.38;
+  }
+  to {
+    margin-left: 5vw;
+    opacity: 0.62;
+  }
+}
+@media (max-width: 767px) {
+  .global-lava__landscape {
+    inset: -28px -34vw;
+    opacity: 0.7;
+    background-attachment: scroll;
+    background-position: center top;
+    background-size: auto 100vh;
+    background-repeat: repeat-y;
+  }
+  .global-lava__readability {
+    background: rgba(3, 5, 13, 0.5);
+  }
+  .global-lava__flow {
+    opacity: 0.28;
+  }
+  .lava-branch {
+    display: none;
+  }
+  .lava-bloom {
+    stroke-width: 15;
+  }
+  .lava-edge {
+    stroke-width: 6;
+  }
+  .global-lava__fog {
+    width: 92vw;
+    opacity: 0.34;
+  }
+  .global-lava-particles i:nth-child(n + 7) {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .global-lava__landscape,
+  .global-lava__flow,
+  .global-lava__fog {
+    transform: none;
+    animation: none;
+  }
+  .lava-reveal {
+    stroke-dashoffset: 0.12;
+    transition: none;
+  }
+  .lava-core,
+  .global-lava-particles i {
+    animation: none;
+  }
+  .global-lava-particles i {
+    opacity: 0.28;
+  }
+}

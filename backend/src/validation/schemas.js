@@ -13,7 +13,10 @@ export const projectSchema = z.object({
     ])
     .default(''),
   category: z.string().trim().min(1).max(60),
+  projectType: z.string().trim().max(80).default(''),
   role: z.string().trim().min(1).max(100),
+  duration: z.string().trim().max(60).default(''),
+  completionYear: z.string().trim().max(20).default(''),
   shortDescription: z.string().trim().min(1).max(240),
   fullDescription: z.string().trim().max(2000).default(''),
   technologies: stringList,

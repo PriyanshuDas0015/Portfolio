@@ -74,6 +74,7 @@ export function PageTearProvider({ children }) {
         aria-hidden="true"
         data-state={state}
       >
+        <div className="page-tear__lava" />
         <motion.div
           className="page-tear__backside"
           initial={false}

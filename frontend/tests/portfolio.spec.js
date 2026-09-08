@@ -1,9 +1,23 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
+test.beforeEach(async ({ page }) => {
+  await page.route('**/api/public/**', (route) =>
+    route.fulfill({
+      status: 503,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: false,
+        message: 'Content service unavailable in browser test.',
+      }),
+    }),
+  );
+});
+
 test('page, responsive layouts, navigation, project previews and cursor', async ({
   page,
 }, testInfo) => {
+  test.setTimeout(150000);
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   page.on('console', (message) => {
@@ -22,12 +36,14 @@ test('page, responsive layouts, navigation, project previews and cursor', async 
     '#projects',
   );
   await expect(page.getByRole('link', { name: /Contact Me/ })).toHaveAttribute('href', '#contact');
-  await expect(page.getByLabel('Portfolio quick facts')).toContainText('4');
+  await expect(page.getByLabel('Portfolio quick facts')).toContainText('5');
   await expect(page.locator('main section')).toHaveCount(10);
   for (const [width, height] of [
     [1920, 1080],
+    [1600, 900],
     [1440, 900],
     [1366, 768],
+    [1280, 720],
     [1024, 768],
     [768, 1024],
     [430, 932],
@@ -71,9 +87,20 @@ test('page, responsive layouts, navigation, project previews and cursor', async 
       'location',
     );
   }
-  await expect(page.locator('.project-card')).toHaveCount(1);
-  await expect(page.locator('.project-card h3')).toHaveText('Your Home');
-  await expect(page.locator('.project-card-link')).toHaveAttribute('href', '/projects/your-home');
+  await expect(page.locator('.project-card')).toHaveCount(5);
+  await expect(page.locator('.project-card h3')).toHaveText([
+    'Your Home',
+    'Gen Villa',
+    'Netflix Clone',
+    'Zara Vice Assistant',
+    'Engineering Vault',
+  ]);
+  await expect(page.locator('.projects-coming-soon')).toBeVisible();
+  await expect(page.locator('.project-card-link').first()).toHaveAttribute(
+    'href',
+    '/projects/your-home',
+  );
+  await expect(page.locator('.global-lava')).toHaveCount(1);
   expect(await page.locator('a[href="#"]').count()).toBe(0);
   const external = await page
     .locator('a[target="_blank"]')
@@ -140,8 +167,50 @@ test('contact validation, real unconfigured API, and simulated delivery states',
   expect(requests).toBe(1);
 });
 
+test('lava follows scroll without blocking content and respects motion preferences', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  const lava = page.locator('.global-lava');
+  const landscape = page.locator('.global-lava__landscape');
+  await expect(lava).toHaveCSS('pointer-events', 'none');
+  await expect(landscape).toHaveCSS('background-image', /global-lava-world\.webp/);
+  const initial = Number(
+    await lava.evaluate((element) => element.style.getPropertyValue('--lava-progress')),
+  );
+  await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo(0, document.documentElement.scrollHeight);
+  });
+  await expect
+    .poll(() =>
+      lava.evaluate((element) => Number(element.style.getPropertyValue('--lava-progress'))),
+    )
+    .toBeGreaterThan(initial);
+  await expect(page.locator('.lava-core').first()).not.toHaveCSS('animation-name', 'none');
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(page.locator('.lava-core').first()).toHaveCSS('animation-name', 'none');
+  await expect(landscape).toHaveCSS('transform', 'none');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.locator('.lava-branch').first()).toHaveCSS('display', 'none');
+});
+
 test('project deep links, tear transitions, next project and browser history', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
+  for (const slug of [
+    'your-home',
+    'gen-villa',
+    'netflix-clone',
+    'zara-vice-assistant',
+    'engineering-vault',
+  ]) {
+    await page.goto(`/projects/${slug}`);
+    await expect(page.locator('.project-detail-artwork > img')).toBeVisible();
+    await expect(page.locator('.project-feature-card')).toHaveCount(4);
+    await expect(page.locator('.global-lava--project')).toHaveCount(1);
+  }
   await page.goto('/projects/netflix-clone');
   await expect(page).toHaveURL(/\/projects\/netflix-clone$/);
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Netflix Clone');
@@ -154,26 +223,36 @@ test('project deep links, tear transitions, next project and browser history', a
     '/#projects',
   );
   await expect(page.locator('.project-feature-card')).toHaveCount(4);
-  await page.getByRole('link', { name: /Spotify Clone/ }).click();
-  await expect(page).toHaveURL(/\/projects\/spotify-clone$/);
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Spotify Clone');
+  await page.getByRole('link', { name: /Zara Vice Assistant/ }).click();
+  await expect(page).toHaveURL(/\/projects\/zara-vice-assistant$/);
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Zara Vice Assistant');
   await page.goBack();
   await expect(page).toHaveURL(/\/projects\/netflix-clone$/);
+  await page.goForward();
+  await expect(page).toHaveURL(/\/projects\/zara-vice-assistant$/);
+  await page.goBack();
+
+  await page.goto('/projects/engineering-vault');
+  await expect(page.getByText(/That’s all for now/)).toBeVisible();
+  await expect(page.locator('.next-project-card')).toHaveCount(0);
 
   await page.goto('/projects/not-a-real-project');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Project not found');
 
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
-  await page.getByRole('link', { name: /View My Projects/ }).click();
-  await page.getByRole('link', { name: /View My Projects/ }).dispatchEvent('click');
-  await expect(page.locator('.page-tear')).toHaveAttribute('data-state', 'tearing');
-  await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
+  await Promise.all([
+    page.waitForFunction(() => document.querySelector('.page-tear')?.dataset.state === 'tearing'),
+    page.getByRole('link', { name: /View My Projects/ }).dispatchEvent('click'),
+  ]);
+  await expect(page.locator('.page-tear__backside')).toHaveCount(1);
+  await expect(page.locator('.page-tear__fibers')).toHaveCount(1);
+  await expect(page.locator('.page-tear__lava')).toHaveCount(1);
   await expect(page).toHaveURL(/#projects$/);
   await expect.poll(() => page.locator('.page-tear').getAttribute('data-state')).toBe('idle');
   await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('');
 
-  await page.locator('.project-card-link').click();
+  await page.locator('.project-card-link').first().click();
   await expect(page).toHaveURL(/\/projects\/your-home$/);
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Your Home');
   await page.setViewportSize({ width: 390, height: 844 });

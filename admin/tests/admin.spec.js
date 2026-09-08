@@ -130,6 +130,9 @@ test('login, dashboard and core content workflows', async ({ page }) => {
   await expect(page.getByText('Project title is required.')).toBeVisible();
   await page.getByLabel('Project Title *').fill('Test Project');
   await page.getByLabel('Role *').fill('Developer');
+  await page.getByLabel('Project Type').fill('Portfolio Experience');
+  await page.getByLabel('Duration').fill('3 Months');
+  await page.getByLabel('Completion Year').fill('2026');
   await page.getByLabel('Short Description *').fill('A tested admin-created project.');
   await page.getByLabel('GitHub URL').fill('invalid-url');
   await page.getByRole('button', { name: /Save Project/ }).click();

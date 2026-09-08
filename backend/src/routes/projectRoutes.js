@@ -5,6 +5,7 @@ import {
   createProject,
   deleteProject,
   deleteProjectGalleryImage,
+  deleteProjectMedia,
   updateProject,
 } from '../controllers/projectController.js';
 import { asyncHandler } from '../middleware/asyncHandler.js';
@@ -39,4 +40,5 @@ router.put(
 );
 router.delete('/:id', asyncHandler(deleteProject));
 router.delete('/:id/gallery/:assetId', asyncHandler(deleteProjectGalleryImage));
+router.delete('/:id/media/:kind', asyncHandler(deleteProjectMedia));
 export default router;

@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import { ArrowRight, Camera, House, Music2, Play } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { mouseGlow } from '../../utils/mouseGlow';
 import { usePageTear } from '../PageTearTransition/PageTearTransition';
 import { navigateTo } from '../../utils/navigation';
+import ProjectMark from './ProjectMark';
 
 export default function ProjectCard({ project, index }) {
   const [imageFailed, setImageFailed] = useState(false);
   const { startTear, isTransitioning } = usePageTear();
-  const fallbackIcons = { blue: House, red: Play, green: Music2, pink: Camera };
-  const FallbackIcon = fallbackIcons[project.color] || House;
   const slug = project.slug || project.id;
   const url = `/projects/${slug}`;
 
@@ -31,14 +30,17 @@ export default function ProjectCard({ project, index }) {
       >
         <div className="project-cover">
           {project.image && !imageFailed ? (
-            <img
-              src={project.image}
-              alt={`${project.title} project screenshot`}
-              loading="lazy"
-              width="700"
-              height="420"
-              onError={() => setImageFailed(true)}
-            />
+            <>
+              <img
+                src={project.image}
+                alt={`${project.title} project screenshot`}
+                loading="lazy"
+                width="700"
+                height="420"
+                onError={() => setImageFailed(true)}
+              />
+              <ProjectMark project={project} className="project-cover-mark" />
+            </>
           ) : (
             <div
               className="project-abstract"
@@ -46,9 +48,10 @@ export default function ProjectCard({ project, index }) {
               role="img"
             >
               <div className="project-orbits" />
-              <span className={`project-glyph identity-${project.color || 'blue'}`}>
-                {project.logo ? <img src={project.logo} alt="" /> : <FallbackIcon />}
-              </span>
+              <ProjectMark
+                project={project}
+                className={`project-glyph identity-${project.color || 'blue'}`}
+              />
               <span className="project-cover-caption">{project.subtitle}</span>
             </div>
           )}

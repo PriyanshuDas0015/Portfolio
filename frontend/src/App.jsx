@@ -23,6 +23,7 @@ import { usePortfolio } from './context/PortfolioContext';
 import ProjectDetailPage from './pages/ProjectDetailPage/ProjectDetailPage';
 import { PageTearProvider } from './components/PageTearTransition/PageTearTransition';
 import { navigationEvent } from './utils/navigation';
+import GlobalLava from './components/GlobalLava/GlobalLava';
 
 const sections = {
   about: About,
@@ -112,6 +113,7 @@ function RoutedExperience() {
       )}
       <Navbar projectMode={projectMode} />
       <main id="main">
+        <GlobalLava projectSlug={match?.[1] || ''} />
         {projectMode ? <ProjectDetailPage slug={match[1]} /> : <PortfolioPage />}
       </main>
       <Footer />

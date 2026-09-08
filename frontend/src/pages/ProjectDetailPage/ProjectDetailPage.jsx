@@ -3,14 +3,18 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUpRight,
+  CalendarDays,
   Check,
+  Clock3,
   Code2,
   Image as ImageIcon,
+  PanelsTopLeft,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { usePageTear } from '../../components/PageTearTransition/PageTearTransition';
 import TornDivider from '../../components/TornDivider/TornDivider';
+import ProjectMark from '../../components/Projects/ProjectMark';
 import { navigateTo } from '../../utils/navigation';
 import './ProjectDetailPage.css';
 
@@ -28,10 +32,10 @@ function AccentTitle({ title }) {
   );
 }
 
-function ProjectArtwork({ project, eager = false, className = '' }) {
+function ProjectArtwork({ project, eager = false }) {
   const [failed, setFailed] = useState(false);
   return (
-    <div className={`project-detail-artwork ${className}`}>
+    <div className="project-detail-artwork">
       {project.image && !failed ? (
         <img
           src={project.image}
@@ -41,17 +45,16 @@ function ProjectArtwork({ project, eager = false, className = '' }) {
         />
       ) : (
         <div
-          className={`project-detail-placeholder project-${project.color || 'blue'}`}
+          className="project-detail-placeholder"
           role="img"
           aria-label={`${project.title} project artwork placeholder`}
         >
-          <span>
-            <ImageIcon />
-          </span>
+          <ImageIcon />
           <strong>{project.title}</strong>
           <small>Project visual coming soon</small>
         </div>
       )}
+      <ProjectMark project={project} className="project-detail-mark" />
     </div>
   );
 }
@@ -62,12 +65,11 @@ export default function ProjectDetailPage({ slug }) {
   const decodedSlug = useMemo(() => decodeURIComponent(slug || ''), [slug]);
   const index = projects.findIndex((item) => projectSlug(item) === decodedSlug);
   const project = projects[index];
-  const nextProject = projects.length > 1 ? projects[(index + 1) % projects.length] : null;
+  const nextProject = index >= 0 && index < projects.length - 1 ? projects[index + 1] : null;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, [decodedSlug]);
-
   const go = (event, path) => {
     event.preventDefault();
     startTear(() => navigateTo(path));
@@ -90,7 +92,6 @@ export default function ProjectDetailPage({ slug }) {
       </section>
     );
   }
-
   if (!project) {
     return (
       <section className="project-detail project-not-found">
@@ -113,19 +114,28 @@ export default function ProjectDetailPage({ slug }) {
   }
 
   const description = project.fullDescription || project.subtitle || project.description;
-  const features = (project.features || []).slice(0, 6);
+  const features = (project.features || []).slice(0, 4);
   const gallery = (project.gallery || []).map(galleryUrl).filter(Boolean);
+  const metadata = [
+    { label: 'Project Duration', value: project.duration || 'Independent build', Icon: Clock3 },
+    { label: 'Project Type', value: project.projectType || project.category, Icon: PanelsTopLeft },
+    {
+      label: 'Completed',
+      value: project.completionYear || 'Portfolio project',
+      Icon: CalendarDays,
+    },
+  ];
 
   return (
     <motion.article
       className={`project-detail project-detail-${project.color || 'blue'}`}
-      initial={{ opacity: 0, y: 22 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.65, ease: 'easeOut' }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
     >
-      <header className="project-detail-hero">
+      <section className="project-chapter-page">
         <div className="project-detail-glow" aria-hidden="true" />
-        <div className="container">
+        <div className="container project-detail-shell">
           <a
             className="project-back-link"
             href="/#projects"
@@ -133,20 +143,17 @@ export default function ProjectDetailPage({ slug }) {
           >
             <ArrowLeft /> Back to Projects
           </a>
-          <div className="project-detail-heading">
-            <div>
-              <span className="project-chapter">
-                PROJECT / {String(index + 1).padStart(2, '0')}
-              </span>
-              <AccentTitle title={project.title} />
-              <p className="project-detail-subtitle">{project.subtitle || project.description}</p>
-            </div>
-            <div className="project-detail-meta">
-              <span>Role</span>
-              <strong>{project.role || 'Developer'}</strong>
-              {project.featured && <b>✦ Featured chapter</b>}
-            </div>
+          <div className="project-title-line">
+            <span className="project-chapter">PROJECT / {String(index + 1).padStart(2, '0')}</span>
+            {project.featured && <span className="project-featured-badge">✦ Featured</span>}
           </div>
+          <AccentTitle title={project.title} />
+          <ProjectArtwork project={project} eager />
+
+          <div className="project-description-row">
+            <p>{description}</p>
+          </div>
+
           <div className="project-detail-tags">
             {(project.technologies || []).map((technology) => (
               <span key={technology}>{technology}</span>
@@ -174,105 +181,108 @@ export default function ProjectDetailPage({ slug }) {
               </a>
             )}
           </div>
-        </div>
-      </header>
-
-      <section className="project-detail-visual container" aria-label="Project preview">
-        <span className="project-margin-note">
-          A project is a chapter
-          <br />
-          in the learning journey.
-        </span>
-        <ProjectArtwork project={project} eager />
-      </section>
-
-      <section className="project-story">
-        <TornDivider />
-        <div className="container project-story-grid">
-          <div>
-            <span className="project-chapter">THE STORY</span>
-            <h2>
-              Built with purpose<span className="gradient-text">.</span>
-            </h2>
-          </div>
-          <p>{description}</p>
-        </div>
-      </section>
-
-      {features.length > 0 && (
-        <section className="project-features-section container">
-          <div className="project-section-heading">
-            <span className="project-chapter">CORE DETAILS</span>
-            <h2>
-              What it includes<span className="gradient-text">.</span>
-            </h2>
-          </div>
-          <div className="project-feature-grid">
-            {features.map((feature, featureIndex) => (
-              <motion.div
-                className="project-feature-card"
-                key={feature}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.35 }}
-                transition={{ delay: featureIndex * 0.06 }}
-              >
+          <div className="project-detail-meta-grid">
+            {metadata.map(({ label, value, Icon }) => (
+              <div key={label}>
+                <Icon />
                 <span>
-                  <Check />
+                  {label}
+                  <strong>{value}</strong>
                 </span>
-                <strong>{feature}</strong>
-                <small>{String(featureIndex + 1).padStart(2, '0')}</small>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </section>
-      )}
 
-      {gallery.length > 0 && (
-        <section className="project-gallery-section container">
-          <div className="project-section-heading">
-            <span className="project-chapter">GALLERY</span>
-            <h2>
-              More of the build<span className="gradient-text">.</span>
-            </h2>
-          </div>
-          <div className="project-detail-gallery">
-            {gallery.map((url, galleryIndex) => (
+          {features.length > 0 && (
+            <section className="project-features-section" aria-labelledby="key-features">
+              <h2 id="key-features">
+                Key <span>Features</span>
+              </h2>
+              <div className="project-feature-grid">
+                {features.map((feature, featureIndex) => (
+                  <motion.div
+                    className="project-feature-card"
+                    key={feature}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ delay: featureIndex * 0.05 }}
+                  >
+                    <Check />
+                    <strong>{feature}</strong>
+                    <small>{String(featureIndex + 1).padStart(2, '0')}</small>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {gallery.length > 0 && (
+            <section className="project-gallery-section" aria-label="Project gallery">
+              <div className="project-detail-gallery">
+                {gallery.map((url, galleryIndex) => (
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    key={`${url}-${galleryIndex}`}
+                  >
+                    <img
+                      src={url}
+                      alt={`${project.title} gallery view ${galleryIndex + 1}`}
+                      loading="lazy"
+                    />
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+      </section>
+
+      <section
+        className={`next-project-section ${nextProject ? '' : 'next-project-section--final'}`}
+      >
+        <TornDivider />
+        <div className="next-project-lava" aria-hidden="true" />
+        <div className="container next-project-content">
+          {nextProject ? (
+            <>
+              <span className="project-chapter">NEXT PROJECT</span>
               <a
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                key={`${url}-${galleryIndex}`}
+                className="next-project-card"
+                href={`/projects/${projectSlug(nextProject)}`}
+                onClick={(event) => go(event, `/projects/${projectSlug(nextProject)}`)}
+                aria-disabled={isTransitioning || undefined}
               >
-                <img
-                  src={url}
-                  alt={`${project.title} gallery view ${galleryIndex + 1}`}
-                  loading="lazy"
-                />
+                {nextProject.image && <img src={nextProject.image} alt="" />}
+                <span>
+                  <small>Next Project</small>
+                  <strong>{nextProject.title}</strong>
+                </span>
+                <ArrowRight />
               </a>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {nextProject && (
-        <section className="next-project-section">
-          <TornDivider />
-          <div className="container">
-            <span className="project-chapter">NEXT PROJECT</span>
-            <a
-              className="next-project-link"
-              href={`/projects/${projectSlug(nextProject)}`}
-              onClick={(event) => go(event, `/projects/${projectSlug(nextProject)}`)}
-              aria-disabled={isTransitioning || undefined}
-            >
-              <span>{nextProject.title}</span>
-              <ArrowRight />
-            </a>
-            <p>Turn the page to the next chapter.</p>
-          </div>
-        </section>
-      )}
+            </>
+          ) : (
+            <>
+              <p className="final-project-note">
+                That’s all for now…
+                <br />
+                More exciting projects
+                <br />
+                coming soon!
+              </p>
+              <a
+                className="button project-code-button"
+                href="/#projects"
+                onClick={(event) => go(event, '/#projects')}
+              >
+                Back to Projects <ArrowLeft />
+              </a>
+            </>
+          )}
+        </div>
+      </section>
     </motion.article>
   );
 }

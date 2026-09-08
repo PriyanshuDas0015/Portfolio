@@ -208,3 +208,21 @@ export async function deleteProjectGalleryImage(req, res) {
   await Promise.all([destroyMedia(publicId), MediaAsset.deleteOne({ publicId })]);
   res.json({ success: true, item: project });
 }
+
+export async function deleteProjectMedia(req, res) {
+  const mediaFields = {
+    image: ['imageUrl', 'imagePublicId'],
+    logo: ['logoUrl', 'logoPublicId'],
+  };
+  const fields = mediaFields[req.params.kind];
+  if (!fields) return res.status(400).json({ success: false, message: 'Unsupported media type.' });
+  const project = await Project.findById(req.params.id);
+  if (!project) return res.status(404).json({ success: false, message: 'Project not found.' });
+  const [urlField, publicIdField] = fields;
+  const publicId = project[publicIdField];
+  project[urlField] = '';
+  project[publicIdField] = '';
+  await project.save();
+  await Promise.all([destroyMedia(publicId), publicId ? MediaAsset.deleteOne({ publicId }) : null]);
+  res.json({ success: true, item: project });
+}

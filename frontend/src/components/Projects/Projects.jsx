@@ -41,7 +41,22 @@ export default function Projects() {
           {visible.map((project, index) => (
             <ProjectCard key={project.slug || project.id} project={project} index={index} />
           ))}
+          <article className="projects-coming-soon" aria-label="More projects coming soon">
+            <span className="projects-coming-plus" aria-hidden="true">
+              +
+            </span>
+            <p>
+              More Projects
+              <br />
+              Coming Soon…
+            </p>
+          </article>
         </div>
+        <p className="projects-margin-note">
+          More than projects,
+          <br />
+          these are chapters of my journey.
+        </p>
       </div>
     </section>
   );

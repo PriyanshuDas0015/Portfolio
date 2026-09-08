@@ -30,4 +30,6 @@ export const adminApi = {
   changePassword: (values) => api.put('/api/admin/account/password', values).then((r) => r.data),
   deleteProjectGalleryImage: (projectId, assetId) =>
     api.delete(`/api/admin/projects/${projectId}/gallery/${assetId}`).then((r) => r.data),
+  deleteProjectMedia: (projectId, kind) =>
+    api.delete(`/api/admin/projects/${projectId}/media/${kind}`).then((r) => r.data),
 };

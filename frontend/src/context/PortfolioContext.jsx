@@ -4,7 +4,7 @@ const PortfolioContext = createContext(defaults);
 const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 const fetchJson = async (path) => {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
+  const timeout = setTimeout(() => controller.abort(), 2500);
   try {
     const response = await fetch(`${base}${path}`, { signal: controller.signal });
     if (!response.ok) throw new Error('Content unavailable');
@@ -18,7 +18,10 @@ const mapProject = (item, index) => ({
   slug: item.slug || item._id,
   title: item.title,
   category: item.category || 'Projects',
+  projectType: item.projectType || item.category || 'Web Experience',
   role: item.role || 'Developer',
+  duration: item.duration || '',
+  completionYear: item.completionYear || '',
   number: String(index + 1).padStart(2, '0'),
   color: item.color || 'blue',
   subtitle: item.fullDescription || item.shortDescription,

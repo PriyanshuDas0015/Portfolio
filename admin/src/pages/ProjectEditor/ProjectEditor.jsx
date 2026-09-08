@@ -11,7 +11,10 @@ const blank = {
   title: '',
   slug: '',
   category: 'Frontend',
+  projectType: '',
   role: '',
+  duration: '',
+  completionYear: '',
   shortDescription: '',
   fullDescription: '',
   technologies: '',
@@ -118,6 +121,22 @@ export default function ProjectEditor() {
       notify(error.message, 'error');
     }
   };
+  const removeProjectMedia = async (kind) => {
+    if (!edit) {
+      if (kind === 'image') setImage(null);
+      if (kind === 'logo') setLogo(null);
+      return;
+    }
+    try {
+      const data = await adminApi.deleteProjectMedia(id, kind);
+      setCurrent(data.item);
+      if (kind === 'image') setImage(null);
+      if (kind === 'logo') setLogo(null);
+      notify(`${kind === 'image' ? 'Project cover' : 'Project logo'} removed`);
+    } catch (error) {
+      notify(error.message, 'error');
+    }
+  };
   if (loading) return <Loading label="Loading project..." />;
   return (
     <>
@@ -167,6 +186,32 @@ export default function ProjectEditor() {
               onChange={change}
               maxLength="60"
               error={errors.category}
+            />
+            <FormInput
+              label="Project Type"
+              name="projectType"
+              value={values.projectType || ''}
+              onChange={change}
+              maxLength="80"
+              error={errors.projectType}
+            />
+            <FormInput
+              label="Duration"
+              name="duration"
+              value={values.duration || ''}
+              onChange={change}
+              maxLength="60"
+              placeholder="e.g. 3+ Months"
+              error={errors.duration}
+            />
+            <FormInput
+              label="Completion Year"
+              name="completionYear"
+              value={values.completionYear || ''}
+              onChange={change}
+              maxLength="20"
+              placeholder="e.g. 2024"
+              error={errors.completionYear}
             />
             <FormInput
               label="Display Order"
@@ -292,8 +337,30 @@ export default function ProjectEditor() {
           </div>
           {(imagePreview || logoPreview) && (
             <div className="preview-row">
-              {imagePreview && <img src={imagePreview} alt="Selected project cover preview" />}
-              {logoPreview && <img src={logoPreview} alt="Selected project logo preview" />}
+              {imagePreview && (
+                <div className="gallery-admin-preview">
+                  <img src={imagePreview} alt="Selected project cover preview" />
+                  <button
+                    type="button"
+                    aria-label="Remove project cover"
+                    onClick={() => removeProjectMedia('image')}
+                  >
+                    <Trash2 />
+                  </button>
+                </div>
+              )}
+              {logoPreview && (
+                <div className="gallery-admin-preview">
+                  <img src={logoPreview} alt="Selected project logo preview" />
+                  <button
+                    type="button"
+                    aria-label="Remove project logo"
+                    onClick={() => removeProjectMedia('logo')}
+                  >
+                    <Trash2 />
+                  </button>
+                </div>
+              )}
             </div>
           )}
           {current?.gallery?.length > 0 && (

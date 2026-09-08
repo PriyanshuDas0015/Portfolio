@@ -38,7 +38,10 @@ test('project schema rejects invalid URLs and accepts empty project links', () =
   const base = {
     title: 'Project',
     category: 'Frontend',
+    projectType: 'Portfolio Experience',
     role: 'Developer',
+    duration: '3 Months',
+    completionYear: '2026',
     shortDescription: 'A valid description',
     fullDescription: '',
     technologies: ['React'],
