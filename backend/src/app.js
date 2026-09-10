@@ -8,7 +8,7 @@ import healthRoutes from './routes/healthRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import publicRoutes from './routes/publicRoutes.js';
 import authRoutes from './routes/authRoutes.js';
-import adminRoutes from './routes/adminRoutes.js';
+import router from './routes/adminRoutes.js';
 
 export function createApp({ services, rateLimit } = {}) {
   const app = express();
@@ -35,7 +35,7 @@ export function createApp({ services, rateLimit } = {}) {
   app.use('/api/public', publicRoutes);
   app.use('/api/admin/auth', authRoutes);
   app.use('/api/admin', authRoutes);
-  app.use('/api/admin', adminRoutes);
+  app.use('/api/admin', router);
   app.use('/api/contact', contactRoutes(services, rateLimit));
   app.use((req, res) => res.status(404).json({ success: false, message: 'Endpoint not found.' }));
   app.use(errorHandler);
