@@ -124,6 +124,14 @@ test('page, responsive layouts, navigation, project previews and cursor', async 
   await expect(page.locator('.custom-cursor')).toHaveCount(2);
   await page.mouse.move(100, 200, { steps: 5 });
   await expect(page.locator('html')).toHaveClass(/cursor-active/);
+  await expect
+    .poll(() =>
+      page.locator('.cursor-ring').evaluate((element) => {
+        const matrix = new DOMMatrix(getComputedStyle(element).transform);
+        return [Math.round(matrix.m41), Math.round(matrix.m42)];
+      }),
+    )
+    .toEqual([100, 200]);
   await page.keyboard.press('Tab');
   await expect(page.locator('html')).not.toHaveClass(/cursor-active/);
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -175,7 +183,10 @@ test('lava follows scroll without blocking content and respects motion preferenc
   const lava = page.locator('.global-lava');
   const landscape = page.locator('.global-lava__landscape');
   await expect(lava).toHaveCSS('pointer-events', 'none');
+  await page.locator('#about').scrollIntoViewIfNeeded();
+  await expect(lava).toHaveClass(/global-lava--active/);
   await expect(landscape).toHaveCSS('background-image', /global-lava-world\.webp/);
+  await expect(landscape).toHaveCSS('background-attachment', /scroll/);
   const initial = Number(
     await lava.evaluate((element) => element.style.getPropertyValue('--lava-progress')),
   );

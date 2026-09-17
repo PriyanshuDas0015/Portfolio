@@ -35,6 +35,7 @@ export default function ProjectCard({ project, index }) {
                 src={project.image}
                 alt={`${project.title} project screenshot`}
                 loading="lazy"
+                decoding="async"
                 width="700"
                 height="420"
                 onError={() => setImageFailed(true)}

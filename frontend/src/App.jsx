@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { MotionConfig } from 'framer-motion';
 import Navbar from './components/Navbar/Navbar';
 import Hero from './components/Hero/Hero';
@@ -20,10 +20,11 @@ import { PortfolioProvider } from './context/PortfolioContext';
 import MyResume from './components/MyResume/MyResume';
 import Certificates from './components/Certificates/Certificates';
 import { usePortfolio } from './context/PortfolioContext';
-import ProjectDetailPage from './pages/ProjectDetailPage/ProjectDetailPage';
 import { PageTearProvider } from './components/PageTearTransition/PageTearTransition';
 import { navigationEvent } from './utils/navigation';
 import GlobalLava from './components/GlobalLava/GlobalLava';
+
+const ProjectDetailPage = lazy(() => import('./pages/ProjectDetailPage/ProjectDetailPage'));
 
 const sections = {
   about: About,
@@ -114,7 +115,19 @@ function RoutedExperience() {
       <Navbar projectMode={projectMode} />
       <main id="main">
         <GlobalLava projectSlug={match?.[1] || ''} />
-        {projectMode ? <ProjectDetailPage slug={match[1]} /> : <PortfolioPage />}
+        {projectMode ? (
+          <Suspense
+            fallback={
+              <div className="project-route-loading" role="status">
+                Loading project…
+              </div>
+            }
+          >
+            <ProjectDetailPage slug={match[1]} />
+          </Suspense>
+        ) : (
+          <PortfolioPage />
+        )}
       </main>
       <Footer />
       <ScrollToTop />

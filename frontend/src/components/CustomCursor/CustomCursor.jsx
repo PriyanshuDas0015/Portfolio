@@ -9,39 +9,41 @@ export default function CustomCursor() {
   const dot = useRef(null);
   useEffect(() => {
     if (!supported) return;
-    let frame;
+    let frame = 0;
     let x = -100;
     let y = -100;
-    let currentX = -100;
-    let currentY = -100;
     let active = false;
-    const follow = () => {
-      currentX += (x - currentX) * 0.2;
-      currentY += (y - currentY) * 0.2;
-      if (ring.current) ring.current.style.transform = `translate3d(${currentX}px,${currentY}px,0)`;
+    let hovering = false;
+
+    const paint = () => {
+      frame = 0;
+      if (ring.current) ring.current.style.transform = `translate3d(${x}px,${y}px,0)`;
       if (dot.current) dot.current.style.transform = `translate3d(${x}px,${y}px,0)`;
-      if (active) frame = requestAnimationFrame(follow);
     };
+
     const move = (event) => {
       x = event.clientX;
       y = event.clientY;
       if (!active) {
         active = true;
-        currentX = x;
-        currentY = y;
         document.documentElement.classList.add('cursor-active');
-        follow();
       }
-      ring.current?.classList.toggle(
-        'cursor-hover',
-        !!event.target.closest(
+      if (!frame) frame = requestAnimationFrame(paint);
+
+      const nextHovering = Boolean(
+        event.target.closest(
           'a,button,summary,input,textarea,.project-card,.skill-card,.skill-orb',
         ),
       );
+      if (nextHovering !== hovering) {
+        hovering = nextHovering;
+        ring.current?.classList.toggle('cursor-hover', hovering);
+      }
     };
     const hide = () => {
       active = false;
       cancelAnimationFrame(frame);
+      frame = 0;
       document.documentElement.classList.remove('cursor-active');
     };
     const keyboard = (event) => {

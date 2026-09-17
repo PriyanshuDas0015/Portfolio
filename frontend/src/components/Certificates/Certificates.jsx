@@ -30,7 +30,12 @@ export default function Certificates() {
                         rel="noreferrer"
                         aria-label={`View ${item.title} certificate image`}
                       >
-                        <img src={item.imageUrl} alt={`${item.title} certificate`} loading="lazy" />
+                        <img
+                          src={item.imageUrl}
+                          alt={`${item.title} certificate`}
+                          loading="lazy"
+                          decoding="async"
+                        />
                       </a>
                     ) : (
                       <Award />

@@ -16,7 +16,7 @@ export default function Navbar({ projectMode = false }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('home');
   const button = useRef(null);
-  const scroll = useScrollPosition();
+  const scrolled = useScrollPosition(30);
   useEffect(() => {
     if (projectMode) {
       setActive('projects');
@@ -42,7 +42,7 @@ export default function Navbar({ projectMode = false }) {
     return () => window.removeEventListener('keydown', close);
   }, [open]);
   return (
-    <header className={`navbar ${scroll > 30 ? 'navbar-scrolled' : ''}`}>
+    <header className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
       <nav className="container nav-inner" aria-label="Main navigation">
         <a
           href={projectMode ? '/#home' : '#home'}

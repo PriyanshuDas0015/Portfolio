@@ -37,11 +37,11 @@ const mapProject = (item, index) => ({
   gallery: item.gallery || [],
   demoVideoUrl: item.demoVideoUrl || '',
 });
-export function PortfolioProvider({ children }) {
-  const [content, setContent] = useState({ ...defaults, source: 'default', loading: true });
-  useEffect(() => {
-    let active = true;
-    Promise.all([
+
+let contentRequest;
+const loadContent = () => {
+  if (!contentRequest) {
+    contentRequest = Promise.all([
       fetchJson('/api/public/site'),
       fetchJson('/api/public/projects'),
       fetchJson('/api/public/skills'),
@@ -50,7 +50,16 @@ export function PortfolioProvider({ children }) {
       fetchJson('/api/public/services'),
       fetchJson('/api/public/resume'),
       fetchJson('/api/public/certificates'),
-    ])
+    ]);
+  }
+  return contentRequest;
+};
+
+export function PortfolioProvider({ children }) {
+  const [content, setContent] = useState({ ...defaults, source: 'default', loading: true });
+  useEffect(() => {
+    let active = true;
+    loadContent()
       .then(([site, projects, skills, timeline, education, services, resume, certificates]) => {
         if (active)
           setContent({

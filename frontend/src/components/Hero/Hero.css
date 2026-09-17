@@ -5,6 +5,7 @@
   padding: 118px 0 28px;
   overflow: hidden;
   isolation: isolate;
+  contain: paint;
   background:
     radial-gradient(circle at 73% 36%, rgba(112, 72, 255, 0.2), transparent 25%),
     radial-gradient(circle at 81% 54%, rgba(40, 102, 255, 0.14), transparent 31%),
@@ -520,13 +521,12 @@
       color-mix(in srgb, var(--brand-color) 13%, transparent),
       transparent 50%
     ),
-    rgba(8, 13, 28, 0.83);
+    rgba(8, 13, 28, 0.94);
   box-shadow:
     inset 0 1px rgba(255, 255, 255, 0.09),
     inset -10px -9px 20px rgba(1, 3, 9, 0.55),
     0 10px 28px rgba(0, 0, 0, 0.38),
     0 0 20px color-mix(in srgb, var(--brand-color) 20%, transparent);
-  backdrop-filter: blur(12px);
   animation: skill-float var(--orb-duration, 12s) ease-in-out infinite;
   animation-delay: var(--orb-delay, 0s);
   transition:
@@ -788,11 +788,22 @@
   border-color: rgba(120, 120, 231, 0.2);
   border-radius: 13px;
   background: linear-gradient(110deg, rgba(10, 15, 31, 0.82), rgba(15, 14, 38, 0.72));
-  backdrop-filter: blur(18px);
   box-shadow:
     inset 0 1px rgba(255, 255, 255, 0.045),
     0 14px 40px rgba(0, 0, 0, 0.22);
   animation: stats-enter 0.65s 1.1s ease-out both;
+}
+
+.hero:not(.hero-motion-active) .hero-stars,
+.hero:not(.hero-motion-active) .volcano-atmosphere,
+.hero:not(.hero-motion-active) .volcano-crater-pulse,
+.hero:not(.hero-motion-active) .volcano-energy-column,
+.hero:not(.hero-motion-active) .volcano-ground-fog,
+.hero:not(.hero-motion-active) .skill-orb-shell,
+.hero:not(.hero-motion-active) .volcano-particles i,
+.hero:not(.hero-motion-active) .volcano-rock,
+.hero:not(.hero-motion-active) .hero-scroll svg {
+  animation-play-state: paused;
 }
 .hero-stat {
   position: relative;

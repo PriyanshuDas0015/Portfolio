@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
 import HeroContent from './HeroContent';
 import HeroStats from './HeroStats';
@@ -28,9 +29,21 @@ export default function Hero() {
   const { settings, skills, projects, education } = usePortfolio();
   const hero = settings.hero;
   const name = splitName(hero.name);
+  const root = useRef(null);
+
+  useEffect(() => {
+    const element = root.current;
+    if (!element) return undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => element.classList.toggle('hero-motion-active', entry.isIntersecting),
+      { rootMargin: '100px 0px', threshold: 0.01 },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section id="home" className="hero">
+    <section ref={root} id="home" className="hero">
       <div className="hero-cosmos" aria-hidden="true">
         <div className="hero-stars hero-stars-far" />
         <div className="hero-stars hero-stars-near" />

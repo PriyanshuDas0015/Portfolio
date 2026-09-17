@@ -10,10 +10,6 @@ const particles = [
   [78, 47, 4.1],
   [38, 55, 1.8],
   [64, 64, 3.6],
-  [25, 72, 0.4],
-  [52, 81, 2.8],
-  [72, 89, 1.4],
-  [41, 96, 4.5],
 ];
 
 const paths = {
@@ -26,26 +22,45 @@ export default function GlobalLava({ projectSlug = '' }) {
   const root = useRef(null);
 
   useEffect(() => {
-    let frame = 0;
-    const update = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const maximum = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-        const progress = Math.min(1, Math.max(0, window.scrollY / maximum));
-        root.current?.style.setProperty('--lava-progress', String(progress));
-        root.current?.style.setProperty('--mountain-shift', `${progress * -58}px`);
-        root.current?.style.setProperty('--lava-shift', `${progress * 34}px`);
-        root.current?.style.setProperty('--fog-shift', `${progress * -92}px`);
-        root.current?.style.setProperty('--fog-shift-reverse', `${progress * 60}px`);
-      });
+    const element = root.current;
+    if (!element) return undefined;
+
+    let maximum = 1;
+    let scrollTimer = 0;
+    const measure = () => {
+      maximum = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     };
-    update();
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
+    const commitProgress = () => {
+      scrollTimer = 0;
+      const progress = Math.min(1, Math.max(0, window.scrollY / maximum));
+      element.style.setProperty('--lava-progress', String(progress));
+    };
+    const queueProgress = () => {
+      window.clearTimeout(scrollTimer);
+      scrollTimer = window.setTimeout(commitProgress, 80);
+    };
+    const resize = () => {
+      measure();
+      commitProgress();
+    };
+
+    measure();
+    commitProgress();
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(document.documentElement);
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => element.classList.toggle('global-lava--active', entry.isIntersecting),
+      { threshold: 0.001 },
+    );
+    visibilityObserver.observe(element);
+    window.addEventListener('scroll', queueProgress, { passive: true });
+    window.addEventListener('resize', resize, { passive: true });
     return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', update);
-      window.removeEventListener('resize', update);
+      window.clearTimeout(scrollTimer);
+      resizeObserver.disconnect();
+      visibilityObserver.disconnect();
+      window.removeEventListener('scroll', queueProgress);
+      window.removeEventListener('resize', resize);
     };
   }, []);
 

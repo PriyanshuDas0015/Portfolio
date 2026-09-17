@@ -16,6 +16,8 @@ export default function About() {
                 className="about-profile-image"
                 src={settings.profile.imageUrl}
                 alt={`${settings.hero?.name || 'Profile'} portrait`}
+                loading="lazy"
+                decoding="async"
               />
             ) : (
               <>

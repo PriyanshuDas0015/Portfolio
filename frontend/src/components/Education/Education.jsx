@@ -23,7 +23,12 @@ export default function Education() {
           >
             <div className="education-icon">
               {education.logoUrl ? (
-                <img src={education.logoUrl} alt={`${education.institution} logo`} loading="lazy" />
+                <img
+                  src={education.logoUrl}
+                  alt={`${education.institution} logo`}
+                  loading="lazy"
+                  decoding="async"
+                />
               ) : (
                 <GraduationCap size={30} />
               )}

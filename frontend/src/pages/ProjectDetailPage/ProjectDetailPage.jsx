@@ -41,6 +41,8 @@ function ProjectArtwork({ project, eager = false }) {
           src={project.image}
           alt={`${project.title} project screenshot`}
           loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+          fetchPriority={eager ? 'high' : 'auto'}
           onError={() => setFailed(true)}
         />
       ) : (
@@ -231,6 +233,7 @@ export default function ProjectDetailPage({ slug }) {
                       src={url}
                       alt={`${project.title} gallery view ${galleryIndex + 1}`}
                       loading="lazy"
+                      decoding="async"
                     />
                   </a>
                 ))}
@@ -255,7 +258,9 @@ export default function ProjectDetailPage({ slug }) {
                 onClick={(event) => go(event, `/projects/${projectSlug(nextProject)}`)}
                 aria-disabled={isTransitioning || undefined}
               >
-                {nextProject.image && <img src={nextProject.image} alt="" />}
+                {nextProject.image && (
+                  <img src={nextProject.image} alt="" loading="lazy" decoding="async" />
+                )}
                 <span>
                   <small>Next Project</small>
                   <strong>{nextProject.title}</strong>

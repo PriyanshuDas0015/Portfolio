@@ -20,14 +20,6 @@ const particles = [
   [13, 40, 3.7, 10],
   [45, 48, 1.6, 14],
   [66, 49, 4.6, 11],
-  [28, 29, 2.4, 13],
-  [76, 14, 1.2, 15],
-  [50, 7, 3.1, 12],
-  [89, 28, 0.4, 14],
-  [39, 25, 4.3, 16],
-  [61, 34, 1.9, 10],
-  [70, 51, 3.6, 13],
-  [55, 27, 0.7, 11],
 ];
 
 export default function VolcanoScene({ skills }) {
@@ -81,7 +73,7 @@ export default function VolcanoScene({ skills }) {
         ))}
       </div>
       <div className="volcano-rocks" aria-hidden="true">
-        {Array.from({ length: 10 }, (_, index) => (
+        {Array.from({ length: 8 }, (_, index) => (
           <i className={`volcano-rock rock-${index + 1}`} key={index} />
         ))}
       </div>
