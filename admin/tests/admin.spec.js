@@ -173,6 +173,31 @@ test('login, dashboard and core content workflows', async ({ page }) => {
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
     .analyze();
   expect(accessibility.violations).toEqual([]);
+
+  await page.getByRole('button', { name: 'Logout', exact: true }).click();
+  await expect(page).toHaveURL(/\/admin\/login$/);
+  await page.goto('/admin/dashboard');
+  await expect(page).toHaveURL(/\/admin\/login$/);
+  await expect(page.getByRole('heading', { name: 'Dashboard', exact: true })).toHaveCount(0);
+});
+
+test('username login redirects immediately and protected deep links require a session', async ({
+  page,
+}) => {
+  await mockAdminApi(page);
+  await page.goto('/projects/new');
+  await expect(page).toHaveURL(/\/admin\/login$/);
+  await page.getByLabel('Email or username').fill('portfolio-admin');
+  await page.getByRole('textbox', { name: /Password/ }).fill('correct-password');
+  const request = page.waitForRequest(
+    (request) => request.url().endsWith('/api/admin/login') && request.method() === 'POST',
+  );
+  await page.getByRole('button', { name: /Login/ }).click();
+  expect((await request).postDataJSON().identifier).toBe('portfolio-admin');
+  await expect(page).toHaveURL(/\/admin\/dashboard$/);
+  await expect(page.getByRole('heading', { name: 'Dashboard', exact: true })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole('heading', { name: 'Dashboard', exact: true })).toBeVisible();
 });
 
 test('mobile navigation drawer exposes every manager', async ({ page }) => {

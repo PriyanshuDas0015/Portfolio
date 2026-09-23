@@ -67,6 +67,7 @@ test('page, responsive layouts, navigation, project previews and cursor', async 
         'aria-expanded',
         'true',
       );
+      await expect(page.getByRole('link', { name: 'Admin Login', exact: true })).toBeVisible();
       await page
         .getByRole('navigation', { name: 'Main navigation' })
         .getByRole('link', { name: 'Projects', exact: true })
@@ -76,6 +77,7 @@ test('page, responsive layouts, navigation, project previews and cursor', async 
         'false',
       );
     } else {
+      await expect(page.getByRole('link', { name: 'Admin Login', exact: true })).toBeVisible();
       await page
         .getByRole('navigation', { name: 'Main navigation' })
         .getByRole('link', { name: 'Projects', exact: true })
@@ -137,6 +139,29 @@ test('page, responsive layouts, navigation, project previews and cursor', async 
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(page.locator('.custom-cursor')).toHaveCount(0);
   expect(errors).toEqual([]);
+});
+
+test('Admin Login opens the existing admin app from desktop, mobile and project pages', async ({
+  page,
+}) => {
+  for (const [width, path] of [
+    [1280, '/'],
+    [390, '/'],
+    [1280, '/projects/your-home'],
+  ]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(path);
+    if (width < 901) await page.getByRole('button', { name: 'Open navigation' }).click();
+    const link = page.getByRole('link', { name: 'Admin Login', exact: true });
+    await expect(link).toBeVisible();
+    const href = await link.getAttribute('href');
+    expect(new URL(href, page.url()).pathname).toBe('/admin/login');
+    await link.click();
+    await expect(page).toHaveURL(href);
+    await expect(page.getByRole('heading', { name: 'Admin Login', exact: true })).toBeVisible();
+    await expect(page.getByLabel('Email or username')).toBeVisible();
+    await expect(page.getByRole('button', { name: /Login/ })).toBeVisible();
+  }
 });
 
 test('contact validation, real unconfigured API, and simulated delivery states', async ({

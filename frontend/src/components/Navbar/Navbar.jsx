@@ -6,6 +6,11 @@ import { usePortfolio } from '../../context/PortfolioContext';
 import { navigateTo } from '../../utils/navigation';
 export default function Navbar({ projectMode = false }) {
   const { settings } = usePortfolio();
+  const adminLoginUrl =
+    import.meta.env.VITE_ADMIN_URL ||
+    (import.meta.env.DEV
+      ? `${window.location.protocol}//${window.location.hostname}:5174/admin/login`
+      : '/admin/login');
   const links = [
     ['Home', 'home'],
     ...(settings.sections || [])
@@ -79,6 +84,9 @@ export default function Navbar({ projectMode = false }) {
               {label}
             </a>
           ))}
+          <a href={adminLoginUrl} onClick={() => setOpen(false)}>
+            Admin Login
+          </a>
         </div>
         <a
           className="button nav-cta"

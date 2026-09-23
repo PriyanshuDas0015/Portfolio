@@ -12,7 +12,7 @@ A responsive React portfolio, a separate React admin dashboard, and an Express/M
 | Admin dashboard  | `http://127.0.0.1:5174/admin/login` | Secure publishing, media, resume, settings and message management        |
 | Express API      | `http://127.0.0.1:3001`             | Public content, admin CRUD, uploads, authentication and contact delivery |
 
-The admin dashboard is a separate application under `admin/`; it is not linked from the public navigation.
+The admin dashboard is a separate application under `admin/`. **Admin Login** in the public desktop and mobile navigation opens its existing login page. Set `frontend/.env` → `VITE_ADMIN_URL` to the full deployed login URL before building.
 
 ## Verified Personal Links
 
@@ -74,6 +74,7 @@ Frontend and admin variables are public build-time values. Never put credentials
 | ---------------------------------------------------------------------- | ------------------------------------------------------------- |
 | `frontend/.env` → `VITE_API_URL`                                       | Deployed API origin; empty uses same-origin `/api` requests   |
 | `frontend/.env` → `VITE_SITE_URL`                                      | Canonical public site origin                                  |
+| `frontend/.env` → `VITE_ADMIN_URL`                                     | Full admin login URL, including `/admin/login`                 |
 | `admin/.env` → `VITE_API_URL`                                          | Deployed API origin for the dashboard                         |
 | `admin/.env` → `VITE_PUBLIC_URL`                                       | Public portfolio URL opened by **View Portfolio**             |
 | `API_PROXY_TARGET`                                                     | Local Vite proxy target; defaults to port 3001                |
@@ -219,5 +220,38 @@ The test suites cover API security and validation, admin authentication and cont
 ## Deployment
 
 Deploy the public site, admin dashboard and API as separate services. Configure both browser apps with the API HTTPS origin. Configure the API with both deployed browser origins, MongoDB, JWT, Cloudinary, and optional SMTP secrets. Seed content and the admin only after production secrets are set.
+
+### Admin Login deployment setup
+
+Your public deployment is `https://portfolio-frontend-on28.vercel.app`. In Vercel, keep that project's Root Directory as `frontend`, and create a second Vercel project from the same repository with Root Directory `admin`. Both use the Vite preset, `npm run build`, and output directory `dist`. The checked-in `vercel.json` in each app supplies the SPA rewrite for direct page access. Set the public project's `VITE_ADMIN_URL` to `https://<your-admin-project>.vercel.app/admin/login` after Vercel assigns its URL. Set the admin project's `VITE_PUBLIC_URL` and backend `FRONTEND_URL` to `https://portfolio-frontend-on28.vercel.app`.
+
+For an admin on `*.vercel.app` and a backend on an unrelated host, leave admin `VITE_API_URL` empty and add an external `/api/:path*` rewrite to the **admin** Vercel project's `vercel.json`, before its existing SPA rewrite. Its destination must be `https://<your-real-backend-host>/api/:path*`. Replace that placeholder with the actual deployed backend address; do not deploy a placeholder. Set backend `ADMIN_URL` to the exact assigned admin origin. Alternatively use same-site custom admin/API domains as below. The backend URL and admin deployment URL are not yet known in this workspace; the public Vercel URL alone does not establish a working admin or database.
+
+Replace the example domain below with your own domain. These are configuration examples, not active deployment links.
+
+| Service | Required production settings |
+| --- | --- |
+| Public frontend | `VITE_ADMIN_URL=https://admin.yourdomain.com/admin/login`, `VITE_API_URL=https://api.yourdomain.com`, `VITE_SITE_URL=https://yourdomain.com` |
+| Admin frontend | `VITE_API_URL=https://api.yourdomain.com`, `VITE_PUBLIC_URL=https://yourdomain.com` |
+| Backend | `NODE_ENV=production`, `MONGODB_URI=<your MongoDB connection string>`, `JWT_SECRET=<long random secret>`, `FRONTEND_URL=https://yourdomain.com`, `ADMIN_URL=https://admin.yourdomain.com` |
+
+- Build the public app with `npm run build -w frontend` and publish `frontend/dist`. Build the existing admin app with `npm run build -w admin` and publish `admin/dist` to its own host. Configure each static host to serve its `index.html` for unmatched page routes (HTTP 200 rewrite), including `/admin/login`, `/admin/dashboard`, and the admin's existing root-level CMS routes. A redirect to `/` is not equivalent.
+- `VITE_ADMIN_URL` is the **full login URL**; backend `ADMIN_URL` is only the **origin**, with no path or trailing slash. Rebuild/redeploy the browser apps after changing `VITE_*` settings. `API_PROXY_TARGET` is development-only; Vite's proxy is not included in static builds.
+- The existing HTTP-only cookie uses `SameSite=Strict` and is Secure in production. Host the admin and API under the same HTTPS parent domain, as above. Unrelated provider domains (for example an admin on Netlify and an API on Render) require a same-origin `/api/*` reverse proxy on the admin host, with admin `VITE_API_URL` empty. The proxy must forward requests, cookies, and `Set-Cookie`, preserve `/api/*`, and run before the SPA fallback. Configure backend `ADMIN_URL` to the browser's actual admin origin. Do not depend on third-party cookies.
+- If public `VITE_ADMIN_URL` is empty in production, `/admin/login` is used. That only works with an explicitly configured reverse proxy to the existing admin app; the public React app does not contain admin routes. For separate static deployments, always set the full URL.
+- Allow the backend server's network access in MongoDB Atlas, create a database user with access to your portfolio database, and provide the complete database URI. Set `PORT` if your host does not inject it; the default is `3001`. Set `TRUST_PROXY_HOPS` only to your provider's documented proxy count (default `0`).
+- Create an account once with `npm run create-admin` against that database, entering your own username, email and password interactively. Existing accounts can continue to log in. `ADMIN_USERNAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` are only needed if using the alternative `npm run seed:admin` command. Never expose these or `JWT_SECRET` in browser environment variables.
+- To use uploads, also set backend `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET`. Optional contact email needs `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`, and `CONTACT_RECEIVER_EMAIL`.
+- Both browser apps must use the same backend/database for CMS changes to appear publicly. Save/publish changes in the existing CMS, then reload the public page to fetch them. No content managers or public API endpoints are replaced by the navbar link.
+
+Locally, preserve any existing `.env` files; copy the examples only when a file is missing. Configure backend `MONGODB_URI` and `JWT_SECRET`, then run `npm run create-admin` (if needed) and `npm run dev` from the repository root. Open `http://127.0.0.1:5173` and click **Admin Login**. The default link opens `http://127.0.0.1:5174/admin/login`; successful authentication opens `/admin/dashboard` in that existing app. `npm run build`, `npm test`, `npm run test:admin`, and `npm run test:browser -- --project=chromium` perform the local checks. Admin browser tests use mocked API responses to verify UI flows; they do not prove a deployed MongoDB account can authenticate.
+
+The existing backend authentication unit tests expect an unconfigured JWT secret. If your local `backend/.env` already sets `JWT_SECRET`, two assertions in `npm test` instead see the unavailable-database response. Run those tests with an isolated empty JWT setting using the following command from the root; it does not edit `.env` or change the running backend:
+
+```powershell
+node -e "const {spawnSync}=require('node:child_process'); const result=spawnSync(process.execPath,['--test','test/admin.test.js','test/contact.test.js'],{cwd:'backend',env:{...process.env,JWT_SECRET:''},stdio:'inherit'}); process.exit(result.status ?? 1);"
+```
+
+Run the public and admin browser suites sequentially because both use the default `test-results` artifact directory. Vercel routing references: [Vite SPA deep links](https://vercel.com/docs/frameworks/frontend/vite) and [external API rewrites](https://vercel.com/docs/routing/rewrites).
 
 After deployment, verify `/api/health`, admin login, one image upload, the real resume upload/download flow, public content loading, and a contact submission. The project has not been published or connected to external service accounts from this workspace.
