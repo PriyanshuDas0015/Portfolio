@@ -18,7 +18,7 @@ export default function AdminLayout() {
         .catch(() => {});
   }, [admin]);
   if (loading) return <Loading label="Checking your session..." />;
-  if (!admin) return <Navigate to="/admin/login" replace />;
+  if (!admin) return <Navigate to="/login" replace />;
   return (
     <div className={`admin-shell ${compact ? 'sidebar-compact' : ''}`}>
       <Sidebar open={open} onClose={() => setOpen(false)} unread={unread} compact={compact} />

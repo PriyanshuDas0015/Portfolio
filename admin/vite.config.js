@@ -4,6 +4,11 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
     plugins: [react()],
+    base: '/admin/',
+    build: {
+      outDir: '../frontend/dist/admin',
+      emptyOutDir: false,
+    },
     server: {
       port: 5174,
       strictPort: true,

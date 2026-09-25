@@ -10,7 +10,7 @@
   "scripts": {
     "install:all": "npm install",
     "dev": "concurrently -k -n API,WEB,ADMIN -c blue,magenta,cyan \"npm run dev -w backend\" \"npm run dev -w frontend\" \"npm run dev -w admin\"",
-    "build": "npm run build -w frontend && npm run build -w admin",
+    "build": "npm run build -w frontend",
     "start": "npm start -w backend",
     "test": "npm test -w backend",
     "seed": "npm run seed -w backend",

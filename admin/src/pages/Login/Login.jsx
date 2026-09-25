@@ -9,7 +9,7 @@ export default function Login() {
   const [values, setValues] = useState({ identifier: '', password: '' });
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  if (admin) return <Navigate to="/admin/dashboard" replace />;
+  if (admin) return <Navigate to="/dashboard" replace />;
   const submit = async (e) => {
     e.preventDefault();
     setError('');
@@ -20,7 +20,7 @@ export default function Login() {
     setBusy(true);
     try {
       await login(values);
-      navigate('/admin/dashboard');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.message);
     } finally {

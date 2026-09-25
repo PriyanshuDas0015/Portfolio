@@ -20,15 +20,14 @@ import ProfileManager from './pages/ProfileManager/ProfileManager';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/admin">
       <ToastProvider>
         <AuthProvider>
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/admin/login" element={<Login />} />
             <Route element={<AdminLayout />}>
               <Route index element={<Dashboard />} />
-              <Route path="admin/dashboard" element={<Dashboard />} />
+              <Route path="dashboard" element={<Dashboard />} />
               <Route path="hero" element={<SettingsManager mode="hero" />} />
               <Route path="about" element={<SettingsManager mode="about" />} />
               <Route path="profile" element={<ProfileManager />} />

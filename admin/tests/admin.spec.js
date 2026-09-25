@@ -106,7 +106,7 @@ async function mockAdminApi(page) {
 
 test('login, dashboard and core content workflows', async ({ page }) => {
   await mockAdminApi(page);
-  await page.goto('/');
+  await page.goto('/admin/');
   await expect(page).toHaveURL(/\/admin\/login$/);
 
   await page.getByLabel('Email').fill('admin@example.com');
@@ -120,7 +120,7 @@ test('login, dashboard and core content workflows', async ({ page }) => {
   await expect(page).toHaveURL(/\/admin\/dashboard$/);
   await expect(page.getByText('12', { exact: true })).toBeVisible();
 
-  await page.goto('/profile');
+  await page.goto('/admin/profile');
   await expect(page.getByRole('heading', { name: 'Profile / About' })).toBeVisible();
   await expect(page.getByLabel('Full name *')).toHaveValue('Priyanshu Das');
   await page.goto('/admin/dashboard');
@@ -139,9 +139,9 @@ test('login, dashboard and core content workflows', async ({ page }) => {
   await expect(page.getByLabel('GitHub URL')).toHaveJSProperty('validity.valid', false);
   await page.getByLabel('GitHub URL').fill('https://github.com/PriyanshuDas0015');
   await page.getByRole('button', { name: /Save Project/ }).click();
-  await expect(page).toHaveURL(/\/projects$/);
+  await expect(page).toHaveURL(/\/admin\/projects$/);
 
-  await page.goto('/resume');
+  await page.goto('/admin/resume');
   await expect(page.getByRole('heading', { name: 'Resume', exact: true })).toBeVisible();
   await expect(page.getByText('No resume uploaded')).toBeVisible();
   await page.locator('input[type=file]').setInputFiles({
@@ -152,11 +152,11 @@ test('login, dashboard and core content workflows', async ({ page }) => {
   await page.getByRole('button', { name: 'Upload Resume' }).click();
   await expect(page.getByText('resume.pdf')).toBeVisible();
 
-  await page.goto('/messages');
+  await page.goto('/admin/messages');
   await page.getByText('Could we discuss a portfolio project?').click();
   await expect(page.getByRole('heading', { name: 'Test Visitor' })).toBeVisible();
 
-  await page.goto('/social-links');
+  await page.goto('/admin/social-links');
   await expect(page.getByLabel('GitHub URL')).toHaveValue('https://github.com/PriyanshuDas0015');
   await expect(page.getByLabel('LinkedIn URL')).toHaveValue(
     'https://www.linkedin.com/in/priyanshu-das-63259b216',
@@ -185,7 +185,7 @@ test('username login redirects immediately and protected deep links require a se
   page,
 }) => {
   await mockAdminApi(page);
-  await page.goto('/projects/new');
+  await page.goto('/admin/projects/new');
   await expect(page).toHaveURL(/\/admin\/login$/);
   await page.getByLabel('Email or username').fill('portfolio-admin');
   await page.getByRole('textbox', { name: /Password/ }).fill('correct-password');
@@ -204,7 +204,7 @@ test('mobile navigation drawer exposes every manager', async ({ page }) => {
   const session = await mockAdminApi(page);
   session.signIn();
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/');
+  await page.goto('/admin/');
   await page.getByRole('button', { name: 'Open navigation' }).click();
   await expect(page.getByRole('link', { name: /Projects/ })).toBeVisible();
   await expect(page.getByRole('link', { name: /Resume/ })).toBeVisible();

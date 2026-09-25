@@ -14,7 +14,9 @@ const credentials = z
 const cookieOptions = {
   httpOnly: true,
   secure: env.production,
-  sameSite: 'strict',
+  // The production admin and API are hosted on separate Vercel origins.
+  // Cross-origin credentialed requests require SameSite=None and Secure.
+  sameSite: env.production ? 'none' : 'strict',
   path: '/api/admin',
   maxAge: 8 * 60 * 60 * 1000,
 };
